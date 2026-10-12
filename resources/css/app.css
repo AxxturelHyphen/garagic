@@ -64,3 +64,6 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* Oculta lo marcado con x-cloak hasta que Alpine arranca (evita parpadeos). */
+[x-cloak] { display: none !important; }
