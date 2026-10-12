@@ -64,16 +64,12 @@
                                 <span class="tarot-border">
                                     <span class="tarot-number">I</span>
                                     <span class="tarot-illustration" aria-hidden="true">
-                                        <svg viewBox="0 0 300 270" role="img" aria-label="Ilustración lineal de un coche clásico">
-                                            <path d="M45 166h210l-13-48c-3-11-10-18-22-22l-39-14H113l-29 21c-9 7-15 16-19 28l-20 35Z" />
-                                            <path d="M80 135h145M111 82l-20 51m76-51 6 51M44 166l-5 26h17m200-26 5 26h-17" />
-                                            <path d="M92 192a20 20 0 1 0 40 0m71 0a20 20 0 1 0 40 0" />
-                                            <circle cx="112" cy="192" r="7" /><circle cx="223" cy="192" r="7" />
-                                            <path d="M58 153h17m154 0h15M145 59v-17m-12 5h24M60 218h180" />
-                                            <path d="M73 227h16m122 0h16" />
-                                        </svg>
+                                        <div class="tarot-img-container">
+                                               <!-- El src cambiará dinámicamente en el futuro con la URL de la API -->
+                                               <img src="{{ asset('images/seat-ibiza-2026.webp') }}" alt="un seat ibiza" />
+                                           </div>
                                     </span>
-                                    <span class="tarot-sun" aria-hidden="true">✳</span>
+                                    <span class="tarot-sun" aria-hidden="true">AAAAAAAA</span>
                                     <span class="tarot-name">el viajero</span>
                                     <span class="tarot-subtitle">SEAT 600 · 1972</span>
                                     <span class="tarot-index">GARAGE · MMXXVI</span>

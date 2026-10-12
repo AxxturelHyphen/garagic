@@ -1,10 +1,16 @@
 @import "@fontsource/im-fell-english/400.css";
 @import "@fontsource/im-fell-english/400-italic.css";
-@import "@fontsource/public-sans/400.css";
-@import "@fontsource/public-sans/500.css";
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "tailwindcss";
 @import "../../vendor/livewire/flux/dist/flux.css";
+
+@font-face {
+    font-family: "Jellyka Saint Andrews Queen";
+    src: url("../../public/fonts/saint-andrews-queen.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -14,9 +20,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Jellyka Saint Andrews Queen", cursive;
     --font-display: "IM Fell English", Georgia, serif;
     --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --font-readable: ui-sans-serif, system-ui, sans-serif;
     --radius-sm: 0;
     --radius-md: 0;
     --radius-lg: 0;
@@ -428,6 +435,21 @@ body {
         color-mix(in srgb, var(--rule) 35%, transparent) 14px 15px
     );
 }
+
+.tarot-img-container {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+}
+
+.tarot-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .tarot-illustration svg {
     width: 90%;
     max-height: 230px;
@@ -1146,4 +1168,47 @@ button[data-flux-button],
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* Jellyka owns the voice; readable sans is reserved for essential interface copy. */
+body,
+body * {
+    text-transform: lowercase !important;
+}
+
+.site-nav,
+.site-nav-actions,
+.site-nav-actions *,
+.button,
+.text-link,
+.hero-intro,
+.hero-note,
+.proof-strip p,
+.manifesto-body > p,
+.notebook-entry p,
+.garage-intro,
+.vehicle-vitality > p,
+.oracle-note > p:not(.eyebrow),
+.site-footer > span,
+[data-flux-field],
+[data-flux-label],
+[data-flux-control],
+[data-flux-input],
+[data-flux-button],
+[data-flux-link],
+input,
+textarea,
+select,
+[role="alert"],
+[role="status"] {
+    font-family: var(--font-readable) !important;
+}
+
+/* Keep values and identifiers exact; their labels remain in Jellyka. */
+.summary-cell strong,
+.vehicle-card-plate,
+.vitality-line strong,
+.reminder-date,
+.back-data strong {
+    font-family: var(--font-mono) !important;
 }
