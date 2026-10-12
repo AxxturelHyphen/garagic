@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#eee9dc">
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml" sizes="any">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
         <title>Garagic — tu vehículo, siempre al día</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @fluxAppearance
@@ -11,7 +14,7 @@
     <body class="garagic-site">
         <header class="site-header">
             <a class="wordmark" href="{{ route('home') }}" aria-label="Garagic, inicio">
-                <span class="wordmark-mark" aria-hidden="true">G</span>
+                <span class="wordmark-mark"><img src="{{ asset('favicon.svg') }}" alt="" aria-hidden="true"></span>
                 <span>garagic<small>libreta de taller</small></span>
             </a>
             <nav class="site-nav" aria-label="Navegación principal">
@@ -53,10 +56,10 @@
                     <p class="hero-note"><span aria-hidden="true">✳</span> Sin conectar al coche. Sin letra pequeña. Tus datos, a tu ritmo.</p>
                 </div>
 
-                <div class="hero-art">
+                <div class="hero-art" x-data="{ flipped: false, tiltX: 0, tiltY: 0 }">
                     <span class="art-caption art-caption-top">arcano nº 01 <span>—</span> el camino</span>
-                    <button class="tarot-card" type="button" aria-pressed="false" aria-label="Girar la carta de ejemplo para ver los datos del vehículo">
-                        <span class="tarot-card-inner">
+                    <button class="tarot-card" type="button" @click="flipped = !flipped" @pointermove="if ($event.pointerType === 'mouse' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) { const bounds = $el.getBoundingClientRect(); tiltX = (($event.clientY - bounds.top) / bounds.height - 0.5) * -4; tiltY = (($event.clientX - bounds.left) / bounds.width - 0.5) * 4; }" @pointerleave="tiltX = 0; tiltY = 0" :style="{ '--tilt-x': tiltX + 'deg', '--tilt-y': tiltY + 'deg' }" :aria-pressed="flipped" aria-label="Girar la carta de ejemplo para ver los datos del vehículo">
+                        <span class="tarot-card-inner" :class="{ 'is-flipped': flipped }">
                             <span class="tarot-face tarot-front">
                                 <span class="tarot-border">
                                     <span class="tarot-number">I</span>
@@ -141,9 +144,11 @@
         </main>
 
         <footer class="site-footer">
-            <a class="wordmark wordmark-small" href="{{ route('home') }}"><span class="wordmark-mark" aria-hidden="true">G</span><span>garagic</span></a>
+            <a class="wordmark wordmark-small" href="{{ route('home') }}"><span class="wordmark-mark"><img src="{{ asset('favicon.svg') }}" alt="" aria-hidden="true"></span><span>garagic</span></a>
             <p>hecho para cuidar lo que te lleva</p>
             <span>© garagic · 2026</span>
         </footer>
+
+        @fluxScripts
     </body>
 </html>
