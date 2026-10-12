@@ -1,0 +1,2 @@
+{{-- Importe en euros con formato español (789,95 €), siempre en mono. --}}@props(['amount'])
+<data value="{{ number_format((float) $amount, 2, '.', '') }}" {{ $attributes->class('font-mono tabular-nums whitespace-nowrap') }}>{{ number_format((float) $amount, 2, ',', '.') }}&nbsp;€</data>

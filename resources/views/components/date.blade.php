@@ -1,0 +1,3 @@
+{{-- Fecha en mono: 12/10/2026 (short) o 12 oct. 2026 (long). Lleva <time> para que sea semántica. --}}@props(['value', 'format' => 'short'])
+@php($day = \Illuminate\Support\Carbon::parse($value))
+<time datetime="{{ $day->toDateString() }}" {{ $attributes->class('font-mono tabular-nums whitespace-nowrap') }}>{{ $format === 'long' ? $day->locale('es')->isoFormat('D MMM YYYY') : $day->format('d/m/Y') }}</time>

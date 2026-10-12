@@ -1,8 +1,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light dark" />
 
+{{-- La marca se escribe literal: APP_NAME sigue siendo «Laravel» en .env. --}}
 <title>
-    {{ filled($title ?? null) ? $title.' - '.config('app.name', 'Laravel') : config('app.name', 'Laravel') }}
+    {{ filled($title ?? null) ? $title.' - Garagic' : 'Garagic' }}
 </title>
 
 <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">

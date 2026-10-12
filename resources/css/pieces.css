@@ -1,0 +1,16 @@
+/* ═══ Piezas propias: vitalidad, sellos, etiquetas, ticket, tabla... ═══
+   Placeholder de WP1a salvo la regla .engraving, que ya necesitan los estados vacíos
+   y que WP1b debe conservar. Se importa desde app.css. */
+
+@layer components {
+    /* Grabado como máscara de tinta: el WebP (alfa) recorta y el color lo pone currentColor,
+       así un mismo archivo sirve en claro y en oscuro. El tamaño y la proporción vienen
+       de <x-engraving> (--engraving, aspect-ratio). */
+    .engraving {
+        display: block;
+        width: 100%;
+        background-color: currentColor;
+        -webkit-mask: var(--engraving) center / contain no-repeat;
+        mask: var(--engraving) center / contain no-repeat;
+    }
+}
