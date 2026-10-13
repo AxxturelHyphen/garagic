@@ -1,5 +1,2 @@
-<x-layouts::auth title="Contraseña nueva">
-    <x-page-header title="Contraseña nueva" />
-
-    <p class="text-graphite">En construcción.</p>
-</x-layouts::auth>
+{{-- Maqueta de acceso: reutiliza la pantalla real (pages/auth) para no duplicar texto ni formulario; así lo que se ve aquí es exactamente lo que se verá en producción. --}}
+@include('pages::auth.reset-password')

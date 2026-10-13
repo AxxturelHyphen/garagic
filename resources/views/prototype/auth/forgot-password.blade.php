@@ -1,5 +1,2 @@
-<x-layouts::auth title="Recuperar contraseña">
-    <x-page-header title="Recuperar contraseña" />
-
-    <p class="text-graphite">En construcción.</p>
-</x-layouts::auth>
+{{-- Maqueta de acceso: reutiliza la pantalla real (pages/auth) para no duplicar texto ni formulario; así lo que se ve aquí es exactamente lo que se verá en producción. --}}
+@include('pages::auth.forgot-password')

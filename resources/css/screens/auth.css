@@ -1,2 +1,53 @@
 /* Estilos propios de las pantallas "auth". Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
    Tokens y variables: ver app.css. Sin rounded/shadow, sin colores fuera de paleta. */
+
+/* Cuerpo de las pantallas de acceso: una columna en móvil (solo el formulario) y, desde lg, la carta a la
+   izquierda y el formulario a la derecha, centrados en vertical. */
+.auth-main {
+    display: grid;
+    align-content: center;
+    gap: 3rem;
+}
+
+.auth-art {
+    display: none;
+    justify-self: center;
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 28rem;
+    justify-self: center;
+}
+
+@media (min-width: 64rem) {
+    .auth-main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: center;
+        gap: 5rem;
+    }
+
+    .auth-art {
+        display: block;
+    }
+}
+
+/* Error de un campo: icono + texto en tinta (sin rojo). El borde del campo ya pasa a tinta con aria-invalid. */
+.auth-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    color: var(--ink);
+}
+
+.auth-error > svg {
+    flex: none;
+    margin-top: 0.4rem;
+}
+
+/* «¿Olvidaste la contraseña?» bajo el campo, alineado a la derecha. */
+.auth-form [data-flux-field] > [data-flux-link] {
+    justify-self: end;
+    margin-top: 0.25rem;
+}
