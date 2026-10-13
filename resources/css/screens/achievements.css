@@ -1,2 +1,76 @@
-/* Estilos propios de las pantallas "achievements". Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
+/* Estilos propios de las pantallas "achievements" (muro de logros y catálogo del admin).
+   Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
    Tokens y variables: ver app.css. Sin rounded/shadow, sin colores fuera de paleta. */
+
+@layer components {
+    /* ── Muro de logros ──────────────────────────────────────────────────
+       El sello recién ganado espera, quieto en su primer fotograma (grande y transparente), a que
+       achievements-wall.js lo vea entrar en pantalla y quite data-stamp-wait. Sin JS no hay
+       nadie que lo quite: por eso con scripting: none la animación corre sola al cargar. */
+    [data-stamp-wait] .stamp[data-fresh] {
+        animation-play-state: paused;
+    }
+
+    @media (scripting: none) {
+        [data-stamp-wait] .stamp[data-fresh] {
+            animation-play-state: running;
+        }
+    }
+
+    /* ── Catálogo del admin ─────────────────────────────────────────────
+       Tabla de libro mayor (.ledger, pieces.css). En escritorio es una tabla normal; en móvil cada
+       fila se apila en dos líneas: nombre + acciones arriba, el resto debajo. */
+    .catalog-ledger .catalog__name { grid-area: name; }
+    .catalog-ledger .catalog__every { grid-area: every; }
+    .catalog-ledger .catalog__uses { grid-area: uses; }
+    .catalog-ledger .catalog__rule { grid-area: rule; }
+    .catalog-ledger .catalog__actions { grid-area: actions; }
+
+    .catalog__actions > div {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.25rem;
+    }
+
+    @media (max-width: 39.99rem) {
+        .catalog-ledger tr {
+            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-areas: 'name actions' 'every uses';
+            align-items: center;
+        }
+
+        .catalog-ledger--rules tr {
+            grid-template-areas: 'name actions' 'rule rule';
+        }
+
+        /* La etiqueta que antepone .ledger («Usos») es texto, no dato: no va en mono. */
+        .catalog-ledger td[data-label]::before {
+            font-family: var(--font-sans);
+        }
+    }
+
+    /* Selector de icono: radios de verdad (teclado y lectores de pantalla) pintados como casillas.
+       Elegido = casilla llena de tinta, igual que el radio segmentado de Flux (flux-theme.css). */
+    .catalog-icon {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        cursor: pointer;
+        border: 1px solid var(--rule);
+        background-color: var(--card);
+        color: var(--ink);
+    }
+
+    .catalog-icon:has(input:checked) {
+        border-color: var(--ink);
+        background-color: var(--ink);
+        color: var(--paper);
+    }
+
+    .catalog-icon:has(input:focus-visible) {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+    }
+}
