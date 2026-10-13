@@ -23,7 +23,7 @@
 <body class="flex min-h-screen flex-col">
     <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-card focus:px-3 focus:py-2">Saltar al contenido</a>
 
-    <header x-data="disclosure()" x-on:keydown.escape.window="close()">
+    <header x-data="disclosure()" x-on:keydown.escape.window="close()" class="print:hidden">
         <div class="mx-auto flex h-16 max-w-6xl items-center gap-8 px-4 md:px-8">
             <x-app-logo :href="$nav[0]['href'] ?? route('home')" wire:navigate />
 

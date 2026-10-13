@@ -225,7 +225,7 @@
             </div>
 
             <div class="mt-8 grid max-w-3xl gap-6">
-                <x-arcana-card urgency="low" summary="Es una factura de mantenimiento rutinario. No hay nada urgente." />
+                <x-arcana-card urgency="low" summary="Es una factura de mantenimiento rutinario." />
                 <x-arcana-card urgency="medium" summary="Suele ser la batería o las bujías. Puedes seguirla usando, pero no lo dejes más de dos semanas." />
                 <x-arcana-card urgency="high" summary="Es probable que las pastillas estén al límite. Afecta a la frenada: revísalo cuanto antes." />
             </div>

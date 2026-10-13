@@ -1,6 +1,6 @@
 {{-- Pie de página: doble filete (rasgo del tarot RWS), marca pequeña y selector de apariencia. En el prototipo añade los enlaces al mapa y a la guía de estilo. --}}
 @props(['prototype' => false])
-<footer class="mt-16">
+<footer class="mt-16 print:hidden">
     <div class="border-t border-ink"></div>
     <div class="mt-[3px] border-t border-hairline"></div>
 

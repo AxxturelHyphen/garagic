@@ -41,11 +41,6 @@
                     @endif
                 @endauth
             </div>
-
-            {{-- Solo en local: acceso discreto al mapa de pantallas. Fuera de local la ruta no existe. --}}
-            @if (app()->isLocal() && Route::has('prototype.index'))
-                <a href="{{ route('prototype.index') }}" class="w-fit text-sm text-graphite hover:text-ink">Prototipo</a>
-            @endif
         </div>
 
         <div class="home-card">

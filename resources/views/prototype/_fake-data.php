@@ -189,7 +189,7 @@ return [
             'invoice' => [
                 'mode' => 'invoice', 'vehicle_id' => 3, 'urgency' => 'low',
                 'question' => "TALLERES HNOS. GARCÍA\nFactura 2026/0412, 03/10/2026\nCitroën Berlingo 2156 GFB, 214.650 km\nAceite 5W30 (4,5 l) ........ 38,70\nFiltro de aceite ............ 9,80\nMano de obra (0,5 h) ....... 22,50\nIVA 21 % ................... 14,91\nTOTAL ...................... 85,91 €",
-                'summary' => 'Es una factura de mantenimiento rutinario: cambio de aceite y filtro. No hay nada urgente.',
+                'summary' => 'Es una factura de mantenimiento rutinario: cambio de aceite y filtro.',
                 'causes' => [],
                 'advice' => 'Si aceptas la entrada, el aviso de aceite del Citroën Berlingo quedará al día y su vitalidad subirá.',
                 'proposals' => [

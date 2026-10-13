@@ -331,7 +331,7 @@ new #[Layout('layouts::prototype'), Title('Oráculo')] class extends Component
                                             <flux:button size="sm" variant="outline" :loading="false" wire:click="decide({{ $i }}, 'discarded')">Descartar</flux:button>
                                         @else
                                             <x-status-tag :tone="$decision === 'accepted' ? 'done' : 'empty'">{{ $decision === 'accepted' ? 'Aceptada' : 'Descartada' }}</x-status-tag>
-                                            <flux:button size="sm" variant="ghost" :loading="false" wire:click="decide({{ $i }}, 'pending')">Deshacer</flux:button>
+                                            <flux:button size="sm" variant="ghost" icon="undo-2" :loading="false" wire:click="decide({{ $i }}, 'pending')">Deshacer</flux:button>
                                         @endif
                                     </div>
                                 </li>

@@ -26,7 +26,8 @@
         </x-slot:actions>
     </x-page-header>
 
-    <ul role="list" class="grid items-start gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+    {{-- overflow-x-clip: el sello recién ganado arranca a escala 1,35 (stamp-in) y en móvil ensanchaba un instante la página (7 px de scroll horizontal). --}}
+    <ul role="list" class="grid items-start gap-x-8 gap-y-10 overflow-x-clip sm:grid-cols-2 lg:grid-cols-4">
         @foreach ($achievements as $achievement)
             @php $fresh = $achievement['unlocked'] && $achievement['fresh']; @endphp
 
