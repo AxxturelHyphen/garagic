@@ -1,2 +1,65 @@
-/* Estilos propios de las pantallas "garage". Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
+/* Estilos propios de las pantallas "garage": panel de la baraja, ficha y formulario de vehículo.
+   Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
    Tokens y variables: ver app.css. Sin rounded/shadow, sin colores fuera de paleta. */
+
+/* ── Baraja: panel del vehículo que está al frente ─────────────────── */
+
+/* Todos los paneles comparten celda: al cambiar de carta se cruzan en vez de apilarse. */
+.garage-aside {
+    display: grid;
+}
+
+.garage-aside > * {
+    grid-area: 1 / 1;
+}
+
+.garage-panel {
+    display: grid;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--hairline);
+}
+
+@media (min-width: 64rem) {
+    .garage-panel {
+        grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+        gap: 2.5rem;
+    }
+}
+
+/* El sello de logro se estampa cuando la carta ya está repartida (si no, acabaría su animación
+   de 250 ms mientras la carta aún vuela). Mismo retraso que el reparto de la mano (card.css)
+   más lo que dura (420 ms) y una pausa. */
+.hand--deal .tc__stamp .stamp[data-fresh] {
+    animation-delay: calc(var(--i, 0) * min(95ms, calc(300ms / max(var(--n) - 1, 1))) + 520ms);
+}
+
+/* ── Filas de aviso que se adaptan al ancho de SU columna, no al de la pantalla ──
+   ritual-row decide su disposición por el ancho de la ventana; en una columna estrecha
+   (ficha a 1024 px) la etiqueta «Vencida hace 14 días» no cabría. Con container queries
+   la fila pasa a dos líneas cuando su contenedor es estrecho. */
+.garage-rows {
+    container-type: inline-size;
+}
+
+@container (max-width: 40rem) {
+    .garage-rows .ritual-row {
+        grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+        grid-template-areas:
+            'icon task cost'
+            'icon due tag';
+    }
+
+    .garage-rows .ritual-row__tag {
+        justify-self: end;
+    }
+}
+
+/* ── Ficha: la carta se queda a la vista mientras se lee el resto ─── */
+@media (min-width: 64rem) {
+    .garage-sticky {
+        position: sticky;
+        top: 2rem;
+        align-self: start;
+    }
+}
