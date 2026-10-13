@@ -1,2 +1,187 @@
-/* Estilos propios de las pantallas "oracle". Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
-   Tokens y variables: ver app.css. Sin rounded/shadow, sin colores fuera de paleta. */
+/* Estilos propios de la pantalla del Oráculo. Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
+   Tokens y variables: ver app.css. Sin rounded/shadow, sin colores fuera de paleta
+   (el bermellón NO aparece aquí: solo lo pinta <x-ai-seal>). */
+
+@layer components {
+    /* La nota «funciona sin el Oráculo»: filete de tinta a la izquierda, como una nota al margen. */
+    .oracle__note {
+        max-width: 65ch;
+        padding-inline-start: 1rem;
+        border-inline-start: 1px solid var(--ink);
+        color: var(--graphite);
+    }
+
+    /* Estado vacío: formulario y, en pantallas anchas, un grabado a su lado. */
+    .oracle__ask {
+        display: grid;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .oracle__engraving {
+        display: none;
+    }
+
+    @media (min-width: 64rem) {
+        .oracle__ask {
+            grid-template-columns: minmax(0, 1fr) 14rem;
+            align-items: start;
+        }
+
+        .oracle__engraving {
+            display: block;
+        }
+    }
+
+    /* Aviso de validación y contador de caracteres (las cifras, en mono). */
+    .oracle__error {
+        font-weight: 400;
+        color: var(--ink);
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 4px;
+    }
+
+    .oracle__count {
+        font-size: 1rem;
+        color: var(--graphite);
+    }
+
+    .oracle__count span {
+        font-family: var(--font-mono);
+        font-size: 0.9375rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .oracle__examples {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0.75rem;
+    }
+
+    /* Cargando: la región role=status siempre está en el DOM; su contenido aparece con wire:loading. */
+    .oracle__wait-region {
+        margin-top: 2rem;
+    }
+
+    .oracle__wait {
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    /* Subtítulos dentro del arcano: tamaño y cursiva, sin negrita (Fell no la tiene). */
+    .oracle__subtitle {
+        font-size: 1.3125rem;
+        line-height: 2rem;
+        margin-bottom: 0.25rem;
+        font-style: italic;
+    }
+
+    /* Causas: lista numerada de verdad (es una secuencia). El número, en mono, no en cifras de Fell. */
+    .oracle__causes {
+        display: grid;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+        padding-inline-start: 2rem;
+        list-style: decimal;
+        max-width: 65ch;
+    }
+
+    .oracle__causes > li::marker {
+        font-family: var(--font-mono);
+        font-size: 0.9375rem;
+        color: var(--graphite);
+    }
+
+    .oracle__likelihood {
+        margin-inline-start: 0.5rem;
+        font-style: italic;
+        color: var(--graphite);
+    }
+
+    /* Entradas propuestas: filas escritas sobre el papel. Móvil: acciones debajo. */
+    .oracle__proposals {
+        margin-top: 1rem;
+        border-top: 1px solid var(--hairline);
+    }
+
+    .oracle-proposal {
+        display: grid;
+        grid-template-columns: 1.25rem minmax(0, 1fr);
+        gap: 0.5rem 0.75rem;
+        align-items: start;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--hairline);
+    }
+
+    .oracle-proposal__icon {
+        margin-top: 0.25rem;
+    }
+
+    .oracle-proposal__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 1rem;
+        align-items: baseline;
+        font-size: 1rem;
+    }
+
+    .oracle-proposal__actions {
+        grid-column: 2;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Descartada: texto gris y fila discontinua (la misma señal que «sin datos»). */
+    .oracle-proposal[data-decision='discarded'] {
+        border-bottom-style: dashed;
+        border-bottom-color: var(--rule);
+    }
+
+    .oracle-proposal[data-decision='discarded'] .oracle-proposal__title {
+        color: var(--graphite);
+    }
+
+    @media (min-width: 40rem) {
+        .oracle-proposal {
+            grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+            align-items: center;
+        }
+
+        .oracle-proposal__actions {
+            grid-column: 3;
+        }
+    }
+
+    /* Historial: fecha, consulta y urgencia. Móvil: apilado. */
+    .oracle__history {
+        margin-top: 1rem;
+        border-top: 1px solid var(--hairline);
+    }
+
+    .oracle-past {
+        display: grid;
+        gap: 0.25rem 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--hairline);
+    }
+
+    /* La etiqueta de urgencia no se estira a todo el ancho en móvil. */
+    .oracle-past > .tag {
+        justify-self: start;
+    }
+
+    @media (min-width: 40rem) {
+        .oracle-past > .tag {
+            justify-self: end;
+        }
+
+        .oracle-past {
+            grid-template-columns: 7rem minmax(0, 1fr) auto;
+            align-items: start;
+        }
+    }
+}
