@@ -1,20 +1,30 @@
-<div class="flex items-start max-md:flex-col">
-    <div class="me-10 w-full pb-4 md:w-[220px]">
-        <flux:navlist aria-label="{{ __('Settings') }}">
-            <flux:navlist.item :href="route('profile.edit')" wire:navigate>{{ __('Profile') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('security.edit')" wire:navigate>{{ __('Security') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('appearance.edit')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
-        </flux:navlist>
-    </div>
+{{--
+    Marco común de las pestañas de ajustes: navegación (Perfil, Seguridad, Apariencia) y un
+    panel de cartulina con el título de la pestaña y su contenido. Lo usan los SFC reales y
+    los mocks del prototipo; estos últimos pasan sus propias pestañas con :nav
+    (lista de ['label', 'href', 'current']). Con nav = null se usan las rutas reales.
+--}}
+@props(['heading' => '', 'subheading' => '', 'nav' => null])
+@php
+    $tabs = $nav ?? [
+        ['label' => __('Perfil'), 'href' => route('profile.edit'), 'current' => request()->routeIs('profile.edit')],
+        ['label' => __('Seguridad'), 'href' => route('security.edit'), 'current' => request()->routeIs('security.edit')],
+        ['label' => __('Apariencia'), 'href' => route('appearance.edit'), 'current' => request()->routeIs('appearance.edit')],
+    ];
+@endphp
+<div>
+    {{-- Pestañas como enlaces: cada una es una página y una URL, así que no necesitan JS ni estado. --}}
+    <nav aria-label="{{ __('Ajustes') }}" class="flex gap-8 overflow-x-auto border-b border-hairline pb-2">
+        @foreach ($tabs as $tab)
+            <x-nav-link :href="$tab['href']" :current="$tab['current']">{{ $tab['label'] }}</x-nav-link>
+        @endforeach
+    </nav>
 
-    <flux:separator class="md:hidden" />
+    <x-panel variant="raised" :title="$heading" class="mt-8 max-w-xl">
+        @if (filled($subheading))
+            <p class="-mt-2 mb-4 text-graphite">{{ $subheading }}</p>
+        @endif
 
-    <div class="flex-1 self-stretch max-md:pt-6">
-        <flux:heading>{{ $heading ?? '' }}</flux:heading>
-        <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
-
-        <div class="mt-5 w-full max-w-lg">
-            {{ $slot }}
-        </div>
-    </div>
+        {{ $slot }}
+    </x-panel>
 </div>

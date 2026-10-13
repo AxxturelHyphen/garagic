@@ -4,17 +4,17 @@ use Livewire\Component;
 
 new class extends Component {}; ?>
 
-<section class="mt-10 space-y-6">
-    <div class="relative mb-5">
-        <flux:heading>{{ __('Delete account') }}</flux:heading>
-        <flux:subheading>{{ __('Delete your account and all of its resources') }}</flux:subheading>
+{{-- Zona de borrado: separada de los formularios y con el verbo explícito en el botón. --}}
+<x-panel :title="__('Borrar cuenta')" class="mt-10 max-w-xl">
+    <div class="grid justify-items-start gap-4">
+        <p>{{ __('Se borran tu cuenta, tus vehículos y su historial. No se puede deshacer.') }}</p>
+
+        <flux:modal.trigger name="confirm-user-deletion">
+            <flux:button variant="danger" data-test="delete-user-button">
+                {{ __('Borrar mi cuenta') }}
+            </flux:button>
+        </flux:modal.trigger>
     </div>
 
-    <flux:modal.trigger name="confirm-user-deletion">
-        <flux:button variant="danger" data-test="delete-user-button">
-            {{ __('Delete account') }}
-        </flux:button>
-    </flux:modal.trigger>
-
     <livewire:pages::settings.delete-user-modal />
-</section>
+</x-panel>

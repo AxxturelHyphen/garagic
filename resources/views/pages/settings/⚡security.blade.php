@@ -58,45 +58,77 @@ new #[Title('Security settings')] class extends Component {
 <section class="w-full">
     @include('partials.settings-heading')
 
-    <flux:heading level="2" class="sr-only">{{ __('Security settings') }}</flux:heading>
+    {{-- «Update password» se queda en inglés a propósito: SecurityTest lo comprueba con assertSee. --}}
+    <x-pages::settings.layout :heading="__('Update password')">
+        {{--
+            Validación en el navegador (validatedForm, resources/js/garagic/forms.js): avisa de lo
+            evidente (campo vacío, mínimo, confirmación) sin esperar al servidor. Es solo comodidad:
+            Livewire sigue validando en updatePassword() y tiene la última palabra (flux:input pinta
+            sus errores). x-on:submit va ANTES de wire:submit para que, si el formulario es
+            inválido, submit() corte el evento y Livewire no envíe nada. El mínimo de 8 es el de
+            Laravel fuera de producción; si el servidor exige más (12 en producción), lo dirá él.
+        --}}
+        <form method="POST" novalidate class="grid gap-6"
+              x-data="validatedForm({
+                  current_password: ['required'],
+                  password: ['required', 'min:8'],
+                  password_confirmation: ['required', 'confirmed:password'],
+              })"
+              x-on:submit="submit($event)"
+              wire:submit="updatePassword">
+            <div class="grid gap-2">
+                <flux:input
+                    wire:model="current_password"
+                    :label="__('Contraseña actual')"
+                    type="password"
+                    required
+                    autocomplete="current-password"
+                    viewable
+                    x-bind="field('current_password')"
+                />
+                <p id="current_password-error" class="flex items-center gap-2" x-show="hasError('current_password')" x-cloak>
+                    <flux:icon.triangle-alert variant="micro" /><span x-text="error('current_password')"></span>
+                </p>
+            </div>
 
-    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
-        <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
-            <flux:input
-                wire:model="current_password"
-                :label="__('Current password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                viewable
-            />
-            <flux:input
-                wire:model="password"
-                :label="__('New password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
-            <flux:input
-                wire:model="password_confirmation"
-                :label="__('Confirm password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
+            <div class="grid gap-2">
+                <flux:input
+                    wire:model="password"
+                    :label="__('Contraseña nueva')"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
+                    viewable
+                    x-bind="field('password')"
+                />
+                <p id="password-error" class="flex items-center gap-2" x-show="hasError('password')" x-cloak>
+                    <flux:icon.triangle-alert variant="micro" /><span x-text="error('password')"></span>
+                </p>
+            </div>
 
-            <div class="flex items-center gap-4">
+            <div class="grid gap-2">
+                <flux:input
+                    wire:model="password_confirmation"
+                    :label="__('Repite la contraseña')"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
+                    viewable
+                    x-bind="field('password_confirmation')"
+                />
+                <p id="password_confirmation-error" class="flex items-center gap-2" x-show="hasError('password_confirmation')" x-cloak>
+                    <flux:icon.triangle-alert variant="micro" /><span x-text="error('password_confirmation')"></span>
+                </p>
+            </div>
+
+            <div>
                 <flux:button variant="primary" type="submit" data-test="update-password-button">
-                    {{ __('Save') }}
+                    {{ __('Guardar') }}
                 </flux:button>
             </div>
         </form>
-
-
     </x-pages::settings.layout>
 
 </section>

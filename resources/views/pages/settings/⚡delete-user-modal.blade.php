@@ -25,25 +25,22 @@ new class extends Component {
     }
 }; ?>
 
-<flux:modal name="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable class="max-w-lg">
-    <form method="POST" wire:submit="deleteUser" class="space-y-6">
-        <div>
-            <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>
-
-            <flux:subheading>
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-            </flux:subheading>
+<flux:modal name="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable class="w-full max-w-lg">
+    <form method="POST" wire:submit="deleteUser" class="grid gap-6">
+        <div class="grid gap-2">
+            <flux:heading size="lg" class="pe-8">{{ __('¿Seguro que quieres borrar tu cuenta?') }}</flux:heading>
+            <p class="text-graphite">{{ __('Escribe tu contraseña para confirmar.') }}</p>
         </div>
 
-        <flux:input wire:model="password" :label="__('Password')" type="password" viewable />
+        <flux:input wire:model="password" :label="__('Contraseña')" type="password" viewable />
 
-        <div class="flex justify-end space-x-2 rtl:space-x-reverse">
+        <div class="flex justify-end gap-2">
             <flux:modal.close>
-                <flux:button variant="filled">{{ __('Cancel') }}</flux:button>
+                <flux:button variant="outline">{{ __('Cancelar') }}</flux:button>
             </flux:modal.close>
 
             <flux:button variant="danger" type="submit" data-test="confirm-delete-user-button">
-                {{ __('Delete account') }}
+                {{ __('Borrar mi cuenta') }}
             </flux:button>
         </div>
     </form>
