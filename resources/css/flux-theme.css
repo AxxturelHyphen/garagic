@@ -1,0 +1,155 @@
+/* ═══ Capa Flux: adapta los componentes de Flux (gratis) a la identidad ═══
+   Va SIN @layer a propósito: los estilos sin capa ganan a las utilidades de
+   Tailwind que Flux escribe en sus clases (rounded-lg, shadow-xs, bg-white...).
+   Comprobado contra Flux 2.20.1. Si se actualiza Flux, revisar los selectores
+   marcados con [clase de Flux]. */
+
+/* 1. Radio 0 y sin sombras en TODO: Flux usa rounded-full y valores arbitrarios
+   (rounded-[6px], shadow-[inset...]) que el tema no alcanza. */
+*,
+::before,
+::after,
+::backdrop,
+::file-selector-button {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 2. Foco visible y único (los "ring" de Tailwind eran sombras y ya no existen). */
+:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+
+/* 3. Campos (heredado del starter) */
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply !mb-0 !leading-tight;
+    color: var(--ink);
+    /* Fell solo tiene peso 400. */
+    font-weight: 400;
+}
+
+[data-flux-description] { color: var(--graphite); }
+[data-flux-error] { color: var(--ink); }
+
+:is(input, textarea, select)[data-flux-control],
+textarea[data-flux-textarea] {
+    background-color: var(--card);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+}
+
+:is(input, textarea, select)[data-flux-control]::placeholder,
+textarea[data-flux-textarea]::placeholder {
+    color: var(--graphite);
+    opacity: 0.8;
+}
+
+:is(input, textarea, select)[data-flux-control]:focus-visible,
+textarea[data-flux-textarea]:focus-visible {
+    border-color: var(--ink);
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+
+/* Error: borde de tinta (el mensaje con icono y texto explica qué falla). */
+:is(input, textarea, select)[data-flux-control][data-invalid],
+:is(input, textarea, select)[data-flux-control][aria-invalid='true'] {
+    border-color: var(--ink);
+}
+
+/* Fechas, km y dinero en mono (añadid class:input="font-mono" en km y €). */
+input[type='date'][data-flux-control] { font-family: var(--font-mono); }
+input[type='date']::-webkit-calendar-picker-indicator { opacity: 0.7; cursor: pointer; }
+.dark input[type='date']::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+/* 4. Botones: filete de tinta en los que tienen fondo; ghost/subtle sin borde.
+   [clase de Flux] .bg-transparent = ghost/subtle; .bg-red-500 = danger. */
+[data-flux-button]:not(.bg-transparent) {
+    border: 1px solid var(--ink);
+}
+
+[data-flux-button].bg-red-500 {
+    background-color: var(--ink);
+    color: var(--paper);
+}
+
+/* 5. Títulos de Flux en caligráfica (solo los grandes: h1/h2 y tamaños 2xl/4xl). */
+[data-flux-heading] { color: var(--ink); }
+
+[data-flux-heading]:is(h1, h2, .text-2xl, .text-4xl) {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-synthesis: none;
+}
+
+[data-flux-subheading],
+[data-flux-text] { color: var(--graphite); }
+
+[data-flux-link] {
+    color: var(--ink);
+    text-decoration-line: underline;
+    text-decoration-color: currentColor;
+}
+
+/* 6. Menús, modales y toasts: objetos flotantes sin sombra → necesitan filete de tinta. */
+[data-flux-menu] {
+    background-color: var(--card);
+    border: 1px solid var(--ink);
+}
+
+[data-flux-menu-item] { color: var(--ink); }
+
+/* El hover/foco de Flux usa zinc-50, casi igual que la cartulina: se marca con el filete. */
+[data-flux-menu-item][data-active] { background-color: var(--hairline); }
+
+[data-flux-modal] > dialog {
+    background-color: var(--card);
+    border: 1px solid var(--ink);
+    color: var(--ink);
+}
+
+[data-flux-modal] > dialog::backdrop { background-color: var(--scrim); }
+
+[data-flux-toast-dialog] > div {
+    background-color: var(--card);
+    border: 1px solid var(--ink);
+}
+
+/* [clase de Flux] iconos de color del toast (heroicons sólidos): fuera; el texto ya dice qué pasó. */
+[data-flux-toast-dialog] svg.size-4.shrink-0 { display: none !important; }
+
+/* 7. Radio segmentado (apariencia, modos del Oráculo): marco de plomo y seleccionado en tinta. */
+[data-flux-radio-group-segmented] {
+    border: 1px solid var(--rule);
+    background-color: transparent;
+}
+
+[data-flux-radio-segmented] { color: var(--graphite); }
+
+[data-flux-radio-segmented][data-checked] {
+    background-color: var(--ink);
+    color: var(--paper);
+}
+
+[data-flux-radio-segmented][data-checked] [data-flux-icon] { color: var(--paper); }
+
+/* 8. Iconos: una familia (Lucide) y UN grosor real en pantalla, sea cual sea el tamaño. */
+svg[data-flux-icon] { stroke-width: 1.5; }
+
+svg[data-flux-icon] :is(path, circle, rect, line, polyline, polygon, ellipse) {
+    vector-effect: non-scaling-stroke;
+}
+
+/* 9. Marca: <x-app-logo> (de David) usa flux:brand; su nombre pasa a la caligráfica,
+   que es el wordmark, no texto de interfaz. [clase de Flux] el nombre es el último div. */
+[data-flux-brand] > div:last-child:not(:first-child) {
+    font-family: var(--font-display);
+    font-size: 1.875rem;
+    line-height: 1;
+    color: var(--ink);
+}

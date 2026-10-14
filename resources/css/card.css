@@ -1,0 +1,558 @@
+/* ═══ Carta de tarot y mano de cartas ═══
+   Estructura (la pinta <x-tarot-card>):
+
+     .tc                          caja de 7:12 y contenedor de medidas (todo se mide en cqi)
+      ├ .tc__hit                  botón que cubre la carta: giro con clic, Enter y Espacio
+      └ .tc__tilt                 inclinación con el cursor
+         └ .tc__inner             giro 3D
+            ├ .tc__face--front    cara: .tc__paper (con desgaste) + .tc__glare + .tc__stamp
+            └ .tc__face--back     dorso: .tc__paper--back
+
+   cqi = 1 % del ancho de la carta: la misma carta vale a 144 px y a 380 px.
+   La única entrada del desgaste es --vitality (0-100), puesta inline por Blade. */
+
+@layer components {
+    /* ── 1. La caja y su giro ───────────────────────────────────────── */
+    .tc {
+        position: relative;
+        container-type: inline-size;
+        aspect-ratio: 7 / 12;            /* proporción de las cartas Rider-Waite-Smith (1909) */
+        perspective: 1400px;
+        color: var(--ink);
+        -webkit-tap-highlight-color: transparent;
+
+        /* Desgaste. El porqué: guardar UN solo número (la vitalidad) y derivar de él todo el
+           aspecto. --wear va de 0 (carta perfecta) a 1 (carta a cero); los filtros, el grano y
+           las manchas de más abajo son funciones de --wear. Cambiar la vitalidad cambia la carta
+           entera sin tocar nada más. */
+        --wear: calc((100 - var(--vitality, 100)) / 100);
+    }
+
+    .tc__tilt,
+    .tc__inner {
+        position: absolute;
+        inset: 0;
+        transform-style: preserve-3d;
+    }
+
+    .tc__tilt {
+        transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+        transition: transform var(--dur-quick) var(--ease-ink);
+    }
+
+    .tc__inner {
+        transition: transform var(--dur-card) var(--ease-ink);
+    }
+
+    .tc[data-flipped='true'] .tc__inner {
+        transform: rotateY(180deg);
+    }
+
+    /* Cada cara oculta su reverso: así solo se ve la que mira al frente. */
+    .tc__face {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border: 1px solid var(--ink);
+        background-color: var(--card);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+
+    .tc__face--back {
+        transform: rotateY(180deg);
+    }
+
+    /* El botón cubre la carta: así el giro funciona con clic, Enter y Espacio. */
+    .tc__hit {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        cursor: pointer;
+        touch-action: manipulation;      /* sin la espera del doble toque en móvil */
+    }
+
+    .tc__hit:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 4px;
+    }
+
+    /* Entrada de la portada: llega boca abajo, se posa y se gira (700 ms).
+       El porqué de dos animaciones: la opacidad NO puede animarse en .tc__inner. Un elemento
+       con transform-style: preserve-3d y opacity < 1 se aplana, y entonces el frente se vería
+       al revés mientras gira. La opacidad va en .tc (que no es preserve-3d) y el giro, solo
+       transform, en .tc__inner. */
+    .tc--deal {
+        animation: tc-enter-fade calc(var(--dur-deal) * 0.55) linear backwards;
+    }
+
+    .tc--deal .tc__inner {
+        animation: tc-enter-spin var(--dur-deal) var(--ease-ink) backwards;
+    }
+
+    @keyframes tc-enter-fade {
+        from { opacity: 0; }
+    }
+
+    @keyframes tc-enter-spin {
+        0%   { transform: translateY(14%) rotateZ(-6deg) rotateY(180deg); }
+        55%  { transform: translateY(0) rotateZ(-1.5deg) rotateY(180deg); }
+        100% { transform: none; }
+    }
+
+    /* "Sacar carta" del Oráculo: del dorso al frente. */
+    .tc--reveal .tc__inner {
+        animation: tc-reveal var(--dur-card) var(--ease-ink) backwards;
+    }
+
+    /* ── 2. Cara: cartulina, doble filete, numeral, arte, nombre ────── */
+
+    /* El margen de cartulina (4,5 cqi) como en las RWS. El filtro de desgaste va en este
+       hijo y no en la cara: un filter junto a backface-visibility falla en Safari. Lleva
+       fondo propio para que el arte con multiply se mezcle con la cartulina DENTRO del
+       grupo que crea el filtro (si no, mezclaría con "nada" y el blanco seguiría blanco). */
+    .tc__paper {
+        position: absolute;
+        inset: 0;
+        padding: 4.5cqi;
+        background-color: var(--card);
+        filter:
+            grayscale(calc(var(--wear) * 0.4))
+            sepia(calc(var(--wear) * 0.85))
+            contrast(calc(1 - var(--wear) * 0.2));
+    }
+
+    /* Doble filete (rasgo RWS): dos cajas de 1 px con aire entre ellas. */
+    .tc__frame {
+        height: 100%;
+        border: 1px solid currentColor;
+        padding: 1.4cqi;
+    }
+
+    .tc__frame-inner {
+        position: relative;
+        height: 100%;
+        border: 1px solid currentColor;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto auto;
+    }
+
+    /* Numeral y nombre: la caligráfica (--font-display) solo está aquí y en los títulos. */
+    .tc__numeral {
+        font-family: var(--font-display);
+        font-size: 10cqi;
+        line-height: 1;
+        text-align: center;
+        padding: 2.4cqi 0 1.8cqi;
+        border-bottom: 1px solid currentColor;
+        font-synthesis: none;
+    }
+
+    .tc__title {
+        font-family: var(--font-display);
+        font-size: 9.5cqi;
+        line-height: 1.02;
+        text-align: center;
+        text-wrap: balance;
+        padding: 2.4cqi 3cqi 1.2cqi;
+        border-top: 1px solid currentColor;
+        font-synthesis: none;
+    }
+
+    .tc__plate {
+        justify-self: center;
+        margin-bottom: 2.6cqi;
+        padding: 0.5cqi 2.6cqi;
+        border: 1px solid var(--rule);
+        font-family: var(--font-mono);
+        font-size: 4.6cqi;
+        line-height: 1.3;
+        letter-spacing: 0.1em;
+        color: var(--graphite);
+    }
+
+    /* ── 3. La ventana del arte ─────────────────────────────────────── */
+    .tc__window {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Rayos tras el vehículo (tarot clásico: Sol, Rueda): líneas finas que salen del centro y
+       se desvanecen hacia los bordes. Geometría trivial, sin dibujos. */
+    .tc__rays {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-conic-gradient(
+            from -1deg at 50% 54%,
+            color-mix(in oklab, currentColor 55%, transparent) 0 0.7deg,
+            transparent 0.7deg 7.2deg
+        );
+        mask-image: radial-gradient(circle at 50% 54%, transparent 12%, #000 36%, transparent 86%);
+        -webkit-mask-image: radial-gradient(circle at 50% 54%, transparent 12%, #000 36%, transparent 86%);
+        opacity: calc(0.75 - var(--wear) * 0.4);
+    }
+
+    /* Suelo rayado bajo el vehículo, como el sombreado de un grabado. */
+    .tc__ground {
+        position: absolute;
+        inset: 63% 0 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(to bottom, currentColor 0 1px, transparent 1px 1.7cqi);
+        mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
+        opacity: 0.45;
+    }
+
+    /* Esquineros reales (grabado de encuadernación) en las cuatro esquinas de la ventana.
+       Una sola imagen: las otras tres esquinas son la misma volteada. */
+    .tc__corner {
+        position: absolute;
+        width: 17cqi;
+        aspect-ratio: 406 / 413;
+        pointer-events: none;
+        background-color: currentColor;
+        -webkit-mask: var(--corner-art) center / contain no-repeat;
+        mask: var(--corner-art) center / contain no-repeat;
+        opacity: 0.85;
+    }
+
+    .tc__corner--tl { top: 0; left: 0; }
+    .tc__corner--tr { top: 0; right: 0; transform: scaleX(-1); }
+    .tc__corner--bl { bottom: 0; left: 0; transform: scaleY(-1); }
+    .tc__corner--br { right: 0; bottom: 0; transform: scale(-1, -1); }
+
+    /* Grabado de vehículo: máscara de tinta (WebP con alfa) pintada con currentColor.
+       Ancho EXPLÍCITO: el <span> de la máscara no tiene contenido y con width:auto mediría 0.
+       El selector lleva .tc delante para ganar a .engraving { width: 100% } (pieces.css). */
+    .tc .tc__art {
+        position: absolute;
+        left: 50%;
+        top: 51%;
+        width: 80cqi;
+        translate: -50% -50%;
+        opacity: calc(1 - var(--wear) * 0.35);     /* la tinta se desvanece con el descuido */
+    }
+
+    .tc__icon {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 44cqi;
+        height: 44cqi;
+        translate: -50% -50%;
+    }
+
+    /* ── 4. Foto (Seat Ibiza) y arcano RWS ──────────────────────────── */
+
+    /* La foto de David tiene fondo blanco: multiply sobre la cartulina lo hace desaparecer
+       (blanco × cartulina = cartulina) y deja el coche como una impresión. Los filtros de
+       desgaste van también aquí: la foto envejece a la vez que la carta. */
+    .tc__photo {
+        position: absolute;
+        left: 50%;
+        top: 51%;
+        width: 110cqi;
+        max-width: none;
+        translate: -50% -50%;
+        mix-blend-mode: multiply;
+        filter:
+            grayscale(calc(0.45 + var(--wear) * 0.45))
+            sepia(calc(0.18 + var(--wear) * 0.4))
+            contrast(1.3)
+            brightness(0.92);
+        opacity: calc(1 - var(--wear) * 0.3);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 18%, #000 34%, #000 66%, transparent 82%);
+        mask-image: linear-gradient(to bottom, transparent 18%, #000 34%, #000 66%, transparent 82%);
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+
+    /* Solo en oscuro: con multiply sobre cartulina oscura el coche desaparecería. Se le pone
+       debajo un óvalo de papel claro con el borde difuminado (como un retrato en camafeo) y la
+       foto se multiplica sobre él: dentro del óvalo se ve la foto; fuera, el blanco de la foto
+       se funde con la cartulina oscura. */
+    .tc__vignette {
+        display: none;
+        position: absolute;
+        left: 50%;
+        top: 51%;
+        width: 112cqi;
+        height: 60cqi;
+        translate: -50% -50%;
+        pointer-events: none;
+        background: radial-gradient(ellipse closest-side, var(--ink) 70%, transparent 100%);
+        opacity: calc(0.8 - var(--wear) * 0.3);
+    }
+
+    .dark .tc__vignette {
+        display: block;
+    }
+
+    /* Arcano RWS de 1909: escaneo a color que se unifica con la paleta (gris + sepia) y se
+       recorta para quitar el margen de la carta original, su numeral y su título en inglés
+       (el nombre en español lo pone .tc__title).
+       El recorte llega de Blade como fracciones del escaneo (--l y --t arriba/izquierda,
+       --rw y --rh ancho/alto de la zona buena, --s proporción ancho/alto del escaneo) y aquí
+       se hace "cover" a mano: .tc__arcana-frame es un contenedor de tamaño propio (así sus
+       hijos pueden usar cqw/cqh de la ventana) y la imagen se escala hasta cubrirlo y se
+       centra. Se aísla en este contenedor para no alterar los cqi del resto de la carta. */
+    .tc__arcana-frame {
+        position: absolute;
+        inset: 0;
+        container-type: size;
+        overflow: hidden;
+    }
+
+    .tc__arcana {
+        /* Ancho al que hay que pintar el escaneo entero para que la zona buena cubra la ventana. */
+        --dw: max(calc(100cqw / var(--rw)), calc(100cqh * var(--s) / var(--rh)));
+        --dh: calc(var(--dw) / var(--s));
+
+        position: absolute;
+        width: var(--dw);
+        max-width: none;
+        height: auto;
+        left: calc(-1 * var(--l) * var(--dw) - (var(--rw) * var(--dw) - 100cqw) / 2);
+        top: calc(-1 * var(--t) * var(--dh) - (var(--rh) * var(--dh) - 100cqh) / 2);
+        filter: grayscale(1) sepia(0.35) contrast(1.05);
+        mix-blend-mode: multiply;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+
+    .dark .tc__arcana {
+        /* Oscuro: multiply sobre cartulina oscura lo dejaría casi negro. Se deja la impresión
+           en positivo, sin mezcla, y se baja el brillo para que no deslumbre. */
+        filter: grayscale(1) sepia(0.35) contrast(1.05) brightness(0.82);
+        mix-blend-mode: normal;
+    }
+
+    /* ── 5. Desgaste: grano, manchas, pliegue ───────────────────────── */
+    .tc__grain {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: var(--grain);
+        background-size: 160px;
+        opacity: calc(0.04 + var(--wear) * 0.6);
+        mix-blend-mode: var(--grain-blend);
+    }
+
+    /* Manchas y bordes oscurecidos: crecen con wear², así un 72 casi no se nota y un 30 sí. */
+    .tc__stains {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: calc(var(--wear) * var(--wear) * 1.5);
+        background:
+            radial-gradient(circle at 18% 24%, var(--stain) 0 5%, transparent 9%),
+            radial-gradient(circle at 78% 62%, var(--stain) 0 3%, transparent 7%),
+            radial-gradient(circle at 40% 88%, var(--stain) 0 4%, transparent 8%),
+            radial-gradient(circle at 88% 12%, var(--stain) 0 2.5%, transparent 6%),
+            radial-gradient(ellipse at center, transparent 52%, var(--stain) 120%);
+    }
+
+    /* Pliegue: dos líneas finas cruzando la carta, como de haber estado doblada en un bolsillo. */
+    .tc__stains::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(97deg, transparent 0 39.6%, var(--stain) 39.8% 40.1%, transparent 40.3%),
+            linear-gradient(8deg, transparent 0 66.6%, var(--stain) 66.8% 67.1%, transparent 67.3%);
+    }
+
+    /* Brillo de papel: lo mueve la inclinación. Va fuera de .tc__paper para que no se tiña de sepia. */
+    .tc__glare {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: var(--glare-o, 0);
+        transition: opacity var(--dur-quick);
+        background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 30%), var(--glare), transparent 55%);
+    }
+
+    /* Sin datos: grabado fantasma y un rótulo cruzado (decisión D2). */
+    .tc[data-empty] .tc__art,
+    .tc[data-empty] .tc__photo,
+    .tc[data-empty] .tc__arcana-frame {
+        opacity: 0.22;
+    }
+
+    .tc__nodata {
+        position: absolute;
+        left: 50%;
+        top: 47%;
+        translate: -50% -50%;
+        rotate: -8deg;
+        padding: 1.6cqi 3.4cqi;
+        border: 1px solid var(--ink);
+        outline: 1px solid var(--ink);
+        outline-offset: -3px;
+        background-color: var(--card);
+        font-size: 6.4cqi;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    /* Sello de logro estampado sobre la carta (slot "stamp"). */
+    .tc__stamp {
+        position: absolute;
+        right: 6cqi;
+        bottom: 32cqi;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    /* ── 6. Dorso: xilografía real como máscara + cartucho con los datos ─ */
+    .tc__backart {
+        position: absolute;
+        inset: 4.5cqi;
+        background-color: currentColor;
+        -webkit-mask: var(--back-art) center / 100% 100% no-repeat;
+        mask: var(--back-art) center / 100% 100% no-repeat;
+    }
+
+    .tc__cartouche {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        translate: -50% -50%;
+        width: 66cqi;
+        display: grid;
+        gap: 2.4cqi;
+        padding: 5cqi 5.5cqi;
+        border: 1px solid var(--ink);
+        outline: 1px solid var(--ink);
+        outline-offset: -1.3cqi;
+        background-color: var(--card);
+    }
+
+    .tc__cartouche dt {
+        font-size: 4.8cqi;
+        line-height: 1.15;
+        color: var(--graphite);
+    }
+
+    .tc__cartouche dd {
+        font-family: var(--font-mono);
+        font-size: 4.6cqi;
+        line-height: 1.25;
+        letter-spacing: 0.02em;
+    }
+
+    /* ═══ La mano: cartas grandes pegadas en abanico ═════════════════════
+       Cada carta es un hueco (.hand__slot) colocado por su PROFUNDIDAD: 0 = la que está al
+       frente (a la izquierda, subida y recta); 1, 2, 3 = las demás, cada una asomando un poco
+       más a la derecha y por debajo de la anterior. Al sacar otra carta cambia --depth de todas
+       y el navegador anima el cambio de translate/rotate (300 ms). Blade escribe la
+       profundidad inicial para que no haya salto antes de que arranque Alpine.
+
+       Variables que llegan inline desde Blade: --n (nº de cartas), --i (posición original),
+       --depth, --tilt (giro fijo de cada carta, ±1-3°). */
+    .hand {
+        container-type: inline-size;
+        width: 100%;
+        padding-top: 1.5rem;             /* sitio para que la carta activa suba */
+    }
+
+    .hand__row {
+        /* Ancho de cada carta: hasta 340 px, y menos si hay muchas (con un 85 % visible cada
+           una se lee el nombre de todas), sin bajar de 240 px. */
+        --hw: clamp(15rem, calc(100cqi / (1 + (var(--n) - 1) * 0.85)), 21.25rem);
+        --card-h: calc(var(--hw) * 12 / 7);
+        --step-max: calc(var(--hw) * 0.85);
+        /* Ancho de la mano: el que pide el abanico, sin pasarse del contenedor. */
+        --row-w: min(100cqi, calc(var(--hw) + (var(--n) - 1) * var(--step-max)));
+        /* Lo que asoma cada carta: se aprieta si no caben todas (max evita dividir por 0). */
+        --step: calc((var(--row-w) - var(--hw)) / max(var(--n) - 1, 1));
+        --vstep: 0px;
+
+        position: relative;
+        width: var(--row-w);
+        height: var(--card-h);
+        margin-inline: auto;
+        list-style: none;
+        padding: 0;
+    }
+
+    .hand__slot {
+        --dx: calc(var(--depth) * var(--step));
+        --dy: calc(var(--depth) * var(--vstep));
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--hw);
+        translate: var(--dx) var(--dy);
+        rotate: var(--tilt, 0deg);
+        transform-origin: 50% 100%;          /* abanico: gira desde abajo, como una mano de cartas */
+        z-index: calc(20 - var(--depth));
+        transition:
+            translate var(--dur-card) var(--ease-ink),
+            rotate var(--dur-card) var(--ease-ink);
+    }
+
+    /* La seleccionada sube y se endereza. */
+    .hand__slot[data-active] {
+        translate: var(--dx) calc(var(--dy) - 1.25rem);
+        rotate: 0deg;
+    }
+
+    /* Si el foco de teclado cae en una carta de atrás, que no la tape el resto. */
+    .hand__slot:has(.tc__hit:focus-visible) {
+        z-index: 40;
+    }
+
+    .hand__slot .tc {
+        width: 100%;
+    }
+
+    /* Entrada repartida: cada carta sale del montón (la posición 0) y se abre en abanico.
+       Retraso por índice; con 4 cartas todo termina en unos 700 ms. */
+    .hand--deal .hand__slot .tc {
+        animation: hand-deal 420ms var(--ease-ink) backwards;
+        animation-delay: calc(var(--i) * min(95ms, calc(300ms / max(var(--n) - 1, 1))));
+    }
+
+    @keyframes hand-deal {
+        from {
+            opacity: 0;
+            translate: calc(var(--dx) * -1) calc(var(--dy) * -1);
+            rotate: -9deg;
+        }
+    }
+
+    /* Móvil y tablet vertical: pila vertical solapada. La activa arriba y completa; las demás
+       asoman por debajo con su banda de nombre, y se sacan con un toque. Sin nada que desborde
+       en horizontal. Se decide por el ancho de la propia mano (container query) y no por el de
+       la pantalla: por debajo de ~740 px las cartas del abanico quedarían tan tapadas que no se
+       leería su nombre. */
+    @container (max-width: 46rem) {
+        .hand__row {
+            --hw: min(18.5rem, calc(100cqi - 3rem));
+            --vstep: calc(var(--card-h) * 0.18);
+            --row-w: var(--hw);
+            --step: 0px;
+
+            height: calc(var(--card-h) + (var(--n) - 1) * var(--vstep));
+        }
+
+        .hand__slot[data-active] {
+            translate: var(--dx) var(--dy);
+        }
+
+        .hand--deal .hand__slot .tc {
+            animation-name: hand-deal-stack;
+        }
+    }
+
+    @keyframes hand-deal-stack {
+        from {
+            opacity: 0;
+            translate: 0 -8%;
+            rotate: -3deg;
+        }
+    }
+}

@@ -1,0 +1,50 @@
+/* ═══ Movimiento: 4 familias (a carta · b sello · c barra · d interfaz) ═══ */
+
+/* (a) Reparto de la portada: la carta llega boca abajo, se posa y se gira al frente. */
+@keyframes tc-deal {
+    0%   { opacity: 0; transform: translateY(14%) rotateZ(-6deg) rotateY(180deg); }
+    55%  { opacity: 1; transform: translateY(0) rotateZ(-1.5deg) rotateY(180deg); }
+    100% { opacity: 1; transform: none; }
+}
+
+/* (a) "Sacar carta" del Oráculo: del dorso al frente. */
+@keyframes tc-reveal {
+    from { transform: rotateY(-180deg); }
+    to   { transform: none; }
+}
+
+/* (a) Reparto de la baraja: cada carta cae en su sitio (retraso por índice). */
+@keyframes deck-deal {
+    from { opacity: 0; transform: translateY(10%) rotate(-4deg); }
+}
+
+/* (b) Sello: llega grande y girado y se asienta con un pequeño rebote. */
+@keyframes stamp-in {
+    0%   { opacity: 0; scale: 1.35; rotate: calc(var(--stamp-tilt, 0deg) + 8deg); }
+    70%  { opacity: 1; scale: 0.97; }
+    100% { opacity: 1; scale: 1; rotate: var(--stamp-tilt, 0deg); }
+}
+
+/* (c) Barra de vitalidad: crece desde 0 hasta su valor. */
+@keyframes bar-fill {
+    from { width: 0; }
+}
+
+/* Regla de oro para quien anime: animation-fill-mode "backwards" (no "both"), para que al
+   terminar el elemento vuelva a su estilo normal (p. ej. el estado girado/no girado de la carta).
+   El reparto y el sello usan las propiedades individuales translate/rotate/scale o un hijo
+   distinto, para no pisar el transform de posición. */
+
+/* Equivalente estático: todo termina en su estado final al instante. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+        scroll-behavior: auto !important;
+    }
+}

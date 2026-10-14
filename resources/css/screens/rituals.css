@@ -1,0 +1,122 @@
+/* Estilos propios de Rituales y de Historial y gasto. Solo lo que Tailwind y las piezas
+   (card.css, pieces.css) no cubren. Tokens y variables: ver app.css.
+   Sin rounded/shadow, sin colores fuera de paleta. */
+
+/* ── Formulario de ritual: sin flechitas en los campos numéricos ─────
+   Los campos de km y coste son type="number" (así el navegador entrega "12.5" y la
+   validación no confunde el punto decimal con el de miles), pero las flechas de subir y
+   bajar estorban en una pantalla rápida y rompen el filete del campo. */
+#ritual-form-panel input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+#ritual-form-panel input[type='number']::-webkit-inner-spin-button,
+#ritual-form-panel input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ── Historial: la tabla se apila en móvil ───────────────────────────
+   La base (.ledger en pieces.css) ya oculta la cabecera y pone cada fila en dos columnas.
+   Aquí se decide qué va dónde: arriba el ritual y su coste (lo importante), debajo la
+   fecha y los km, y al final el taller con su etiqueta. Fecha y km no llevan etiqueta
+   visible: su formato (12/10/2026, 211.200 km) ya dice qué son; el atributo data-label
+   se mantiene para quien lea la tabla con lector de pantalla. */
+@media (max-width: 39.99rem) {
+    .history .ledger tbody tr {
+        grid-template-areas:
+            'task cost'
+            'date km'
+            'shop shop';
+        row-gap: 0.25rem;
+    }
+
+    .history__task { grid-area: task; }
+    .history__cost { grid-area: cost; }
+    .history__date { grid-area: date; }
+    .history__km { grid-area: km; }
+    .history__shop { grid-area: shop; }
+
+    .history .history__task {
+        font-size: 1.125rem;
+    }
+
+    .history td.history__task::before,
+    .history td.history__cost::before,
+    .history td.history__date::before,
+    .history td.history__km::before {
+        content: none;
+    }
+
+    .history td.history__shop {
+        color: var(--graphite);
+    }
+
+    /* Total: un solo doble filete en toda la fila (si no, cada celda dibuja el suyo). */
+    .history .ledger tfoot tr {
+        padding-top: 0.75rem;
+        border-top: 3px double var(--ink);
+        border-bottom: 0;
+    }
+
+    .history .ledger tfoot td {
+        border-top: 0;
+    }
+}
+
+/* ── Impresión del historial ─────────────────────────────────────────
+   Para enseñárselo a quien compre el vehículo: solo el título, los totales y la tabla.
+   Se oculta lo que es de la aplicación (cabecera, pie, selector, botones). Los selectores
+   de la cabecera y el pie dependen de cómo está montado app-shell (body > header, footer):
+   si ese componente cambia, revisar aquí. */
+@media print {
+    /* Siempre claro y sin fondo, aunque la pantalla esté en oscuro: la tinta es negra y el
+       papel, blanco. :has() limita esto a la página del historial. */
+    html:has(.history) {
+        --paper: #fff;
+        --card: #fff;
+        --ink: #000;
+        --graphite: #333;
+        --rule: #666;
+        --hairline: #bbb;
+    }
+
+    body:has(.history) > header,
+    body:has(.history) > footer,
+    body:has(.history) > a,
+    body:has(.history) [data-flux-toast-dialog],
+    body:has(.history) ui-toast-group {
+        display: none !important;
+    }
+
+    body:has(.history) main {
+        max-width: none;
+        padding: 0;
+    }
+
+    .history__print-title {
+        display: block;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #000;
+    }
+
+    /* La tabla y los totales a una columna: en A4 caben, y no se parten a mitad de fila. */
+    .history > div {
+        display: block;
+    }
+
+    .history aside {
+        margin-top: 1.5rem;
+    }
+
+    .history .ticket {
+        break-inside: avoid;
+        background: #fff;
+    }
+
+    .history .ledger tr {
+        break-inside: avoid;
+    }
+}

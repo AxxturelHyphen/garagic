@@ -1,28 +1,21 @@
-<x-layouts::auth :title="__('Email verification')">
-    <div class="mt-4 flex flex-col gap-6">
-        <flux:text class="text-center">
-            {{ __('Please verify your email address by clicking on the link we just emailed to you.') }}
-        </flux:text>
+<x-layouts::auth title="Confirmar correo" art="estrella">
+    <div class="flex flex-col gap-6">
+        {{-- Esta pantalla no tiene campos que se expliquen solos: es la única con una frase. --}}
+        <x-auth-header title="Confirma tu correo" description="Abre el enlace que te hemos enviado." />
 
         @if (session('status') == 'verification-link-sent')
-            <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-            </flux:text>
+            <x-auth-session-status status="Te hemos enviado un enlace nuevo." />
         @endif
 
-        <div class="flex flex-col items-center justify-between space-y-3">
+        <div class="flex flex-wrap items-center gap-3">
             <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
-                <flux:button type="submit" variant="primary" class="w-full">
-                    {{ __('Resend verification email') }}
-                </flux:button>
+                <flux:button type="submit" variant="primary">Reenviar</flux:button>
             </form>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <flux:button variant="ghost" type="submit" class="text-sm cursor-pointer" data-test="logout-button">
-                    {{ __('Log out') }}
-                </flux:button>
+                <flux:button variant="ghost" type="submit" class="cursor-pointer" data-test="logout-button">Cerrar sesión</flux:button>
             </form>
         </div>
     </div>

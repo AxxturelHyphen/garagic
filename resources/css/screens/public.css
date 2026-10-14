@@ -1,0 +1,101 @@
+/* Estilos propios de las pantallas "public" (portada y errores). Solo lo que Tailwind y las piezas (card.css, pieces.css) no cubren.
+   Tokens y variables: ver app.css. Sin rounded/shadow, sin colores fuera de paleta. */
+
+@layer components {
+    /* ── Portada ─────────────────────────────────────────────────────────
+       El porqué de medir contra el alto de la ventana: la carta es lo memorable y tiene que
+       verse ENTERA sin hacer scroll. 20.5rem es lo que ocupan alrededor cabecera, márgenes
+       de <main> y pie (≈ 328 px); lo que sobra es el alto disponible, y el ancho sale de la
+       proporción 7:12 de la carta. */
+    .home-hero {
+        display: grid;
+        gap: 2.5rem;
+        align-items: center;
+        justify-items: start;
+    }
+
+    /* Móvil: la carta va primero y centrada; algo más pequeña para que el titular asome. */
+    .home-card {
+        order: -1;
+        width: min(100%, 17rem);
+        margin-inline: auto;
+    }
+
+    .home-title {
+        font-size: 3rem;
+        line-height: 1.05;
+        text-wrap: balance;
+        overflow-wrap: normal;
+        hyphens: none;
+    }
+
+    @media (min-width: 64rem) {
+        .home-hero {
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 4rem;
+            min-height: calc(100svh - 20.5rem);
+        }
+
+        .home-card {
+            order: 0;
+            width: clamp(16rem, calc((100svh - 20.5rem) * 7 / 12), 24rem);
+        }
+
+        .home-title {
+            font-size: 4.5rem;
+        }
+    }
+
+    /* ── Errores ─────────────────────────────────────────────────────────
+       Una columna centrada: arte, una frase, un botón. */
+    .error-page {
+        display: grid;
+        justify-items: center;
+        gap: 2rem;
+        padding-block: 1rem;
+        text-align: center;
+    }
+
+    .error-card {
+        width: min(100%, 11rem);
+    }
+
+    .error-title {
+        font-size: 2.25rem;
+        line-height: 1.1;
+        text-wrap: balance;
+        overflow-wrap: normal;
+        hyphens: none;
+    }
+
+    @media (min-width: 48rem) {
+        .error-title {
+            font-size: 3rem;
+        }
+    }
+
+    /* ── Mapa del prototipo ──────────────────────────────────────────────
+       Lista de enlaces: etiqueta a la izquierda, ruta en mono a la derecha, filetes finos. */
+    .map-link {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        column-gap: 1rem;
+        padding-block: 0.5rem;
+        border-bottom: 1px solid var(--hairline);
+        text-decoration: none;
+    }
+
+    .map-link:hover .map-link__label,
+    .map-link:focus-visible .map-link__label {
+        text-decoration: underline;
+    }
+
+    .map-link__path {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        line-height: 1rem;
+        color: var(--graphite);
+    }
+}

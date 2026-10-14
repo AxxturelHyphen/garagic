@@ -1,0 +1,2 @@
+{{-- Kilómetros con formato español (214.800 km), siempre en mono. --}}@props(['value'])
+<data value="{{ (int) $value }}" {{ $attributes->class('font-mono tabular-nums whitespace-nowrap') }}>{{ number_format((int) $value, 0, ',', '.') }}&nbsp;km</data>

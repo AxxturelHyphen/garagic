@@ -1,5 +1,42 @@
-@import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
+/* ═══════════════════════════════════════════════════════════════════
+   Garagic: hoja de estilos de entrada (Tailwind v4, configuración en CSS)
+   Orden: fuentes → Tailwind y Flux → capas propias → fuentes de clases
+   → variante dark → tema → tokens → base.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Fuentes de texto y datos (Fontsource, desde node_modules: no se pide nada a Google ni a Bunny).
+   Los @import van siempre al principio del archivo.
+   · IM Fell English: todo el texto (cuerpo, etiquetas, navegación, botones, campos).
+   · IBM Plex Mono: datos (km, €, fechas, matrículas). */
+@import "@fontsource/im-fell-english/400.css";
+@import "@fontsource/im-fell-english/400-italic.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
+@import "./flux-theme.css";   /* adapta Flux a la identidad (sin @layer: gana a sus utilidades) */
+@import "./card.css";         /* mecánica de la carta y la baraja */
+@import "./pieces.css";       /* vitalidad, sellos, etiquetas, ticket, tabla... */
+@import "./motion.css";       /* las 4 familias de animación y reduced-motion */
+@import "./screens/public.css";
+@import "./screens/auth.css";
+@import "./screens/garage.css";
+@import "./screens/rituals.css";
+@import "./screens/achievements.css";
+@import "./screens/oracle.css";
+@import "./screens/settings.css";
+
+/* Jellyka Saint Andrews Queen (la fuente de David): caligráfica, SOLO para títulos (h1/h2),
+   números grandes y el nombre/numeral de la carta. Nunca en cuerpo, etiquetas, botones,
+   navegación, tablas ni formularios. */
+@font-face {
+    font-family: "Jellyka Saint Andrews Queen";
+    src: url("../../public/fonts/saint-andrews-queen.otf") format("opentype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -8,59 +45,270 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ── 1. Paleta fija ─────────────────────────────────────────────────
+   Se borra la paleta de Tailwind: así ningún componente puede colar azules,
+   verdes o rojos. Solo existe lo que se define aquí. */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-*: initial;
+    --color-white: #F6F3EC;
+    --color-black: #161411;
 
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
-    --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
+    /* Flux lleva "zinc" escrito en sus clases: lo redefinimos como plomo cálido.
+       Es una escala absoluta (no cambia con el tema): Flux ya usa dark:zinc-700, etc. */
+    --color-zinc-50: #F3EFE6;
+    --color-zinc-100: #EAE5DA;
+    --color-zinc-200: #D6CFC0;
+    --color-zinc-300: #BDB6A6;
+    --color-zinc-400: #8F897C;
+    --color-zinc-500: #5F5A51;
+    --color-zinc-600: #4A463F;
+    --color-zinc-700: #38342E;
+    --color-zinc-800: #2A2723;
+    --color-zinc-900: #221F1B;
+    --color-zinc-950: #161411;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
+    /* Tres familias, y solo tres:
+       display = Saint Andrews (si falta un glifo, cae en Fell);
+       sans    = IM Fell English (así Flux y todo el texto heredan Fell);
+       mono    = IBM Plex Mono (datos). */
+    --font-display: "Jellyka Saint Andrews Queen", "IM Fell English", Georgia, serif;
+    --font-sans: "IM Fell English", Georgia, "Times New Roman", serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --font-serif: initial;
+
+    /* Escala clásica sin el 14: IM Fell no se lee por debajo de 16 px.
+       12 (solo datos en mono) · 16 · 18 (cuerpo) · 21 · 24 · 30 · 36 · 48 · 60 · 72 */
+    --text-xs: 0.75rem;     --text-xs--line-height: 1rem;
+    --text-sm: 1rem;        --text-sm--line-height: 1.5rem;
+    --text-base: 1.125rem;  --text-base--line-height: 1.75rem;
+    --text-lg: 1.3125rem;   --text-lg--line-height: 2rem;
+    --text-xl: 1.5rem;      --text-xl--line-height: 2rem;
+    --text-2xl: 1.875rem;   --text-2xl--line-height: 2.25rem;
+    --text-3xl: 2.25rem;    --text-3xl--line-height: 2.5rem;
+    --text-4xl: 3rem;       --text-4xl--line-height: 3.25rem;
+    --text-5xl: 3.75rem;    --text-5xl--line-height: 1;
+    --text-6xl: 4.5rem;     --text-6xl--line-height: 1;
+
+    --tracking-display: -0.01em;
+    --tracking-title: 0.06em;
+
+    /* Radio 0 en todo. Se dejan definidos a 0 (y no borrados) porque flux.css usa var(--radius-lg). */
+    --radius-xs: 0; --radius-sm: 0; --radius-md: 0; --radius-lg: 0;
+    --radius-xl: 0; --radius-2xl: 0; --radius-3xl: 0; --radius-4xl: 0;
+
+    /* Cero sombras y cero desenfoques (nada de glassmorphism). */
+    --shadow-*: initial;
+    --inset-shadow-*: initial;
+    --drop-shadow-*: initial;
+    --text-shadow-*: initial;
+    --blur-*: initial;
+
+    /* Curvas: "ink" decelera como una carta que se posa; "stamp" rebota un poco, como un sello. */
+    --ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ease-stamp: cubic-bezier(0.3, 1.45, 0.5, 1);
 }
 
+/* ── 2. Paleta semántica (cambia con claro/oscuro) ─────────────────
+   "inline" hace que bg-paper compile a var(--paper): se resuelve en cada
+   elemento, así un bloque con class="dark" dentro de una página clara también cambia. */
+@theme inline {
+    --color-paper: var(--paper);
+    --color-card: var(--card);
+    --color-ink: var(--ink);
+    --color-graphite: var(--graphite);
+    --color-rule: var(--rule);
+    --color-hairline: var(--hairline);
+    --color-vermilion: var(--vermilion);         /* SOLO en <x-ai-seal> */
+    --color-on-vermilion: var(--on-vermilion);
+
+    --color-accent: var(--accent);
+    --color-accent-content: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    /* Flux pinta errores y botones "danger" en rojo: aquí el rojo ES tinta. */
+    --color-red-50: var(--hairline);
+    --color-red-400: var(--ink);
+    --color-red-500: var(--ink);
+    --color-red-600: var(--ink);
+    --color-red-900: var(--ink);
+}
+
+/* ── 3. Tokens crudos: lo único que cambia entre claro y oscuro ──── */
+:root {
+    color-scheme: light;
+
+    --paper: #E4DFD3;
+    --card: #F0ECE2;
+    --ink: #221F1B;
+    --graphite: #5F5A51;
+    --rule: #7D776A;
+    --hairline: #C9C2B2;
+    --vermilion: #B0341A;
+    --on-vermilion: #F0ECE2;
+
+    --accent: var(--ink);                 /* botón primario de Flux = tinta llena */
+    --accent-foreground: var(--card);
+
+    --lattice: color-mix(in oklab, var(--ink) 22%, transparent);
+    --stain: color-mix(in oklab, var(--graphite) 32%, transparent);
+    --glare: rgb(255 255 255 / 0.35);
+    --scrim: rgb(34 31 27 / 0.35);
+
+    /* Grano de papel: ruido SVG (feTurbulence) en un data URI. Cero descargas. */
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --grain-opacity: 0.07;
+    --grain-blend: multiply;
+
+    /* Duraciones de las 4 familias de animación */
+    --dur-quick: 200ms;   /* (d) pestañas, inclinación */
+    --dur-base: 250ms;    /* (b) sello, subrayado */
+    --dur-card: 300ms;    /* (a) giro, baraja; (c) barra */
+    --dur-deal: 700ms;    /* (a) reparto de la portada: la única excepción */
+}
+
+.dark {
+    color-scheme: dark;
+
+    --paper: #1B1916;
+    --card: #25221E;
+    --ink: #E4DFD3;
+    --graphite: #A39D90;
+    --rule: #6F695E;
+    --hairline: #3A362F;
+    --vermilion: #E0583A;
+    --on-vermilion: #1B1916;
+
+    --accent: var(--ink);
+    --accent-foreground: var(--paper);
+
+    --lattice: color-mix(in oklab, var(--ink) 18%, transparent);
+    --stain: color-mix(in oklab, var(--graphite) 28%, transparent);
+    --glare: rgb(255 255 255 / 0.12);
+    --scrim: rgb(0 0 0 / 0.55);
+    --grain-opacity: 0.05;
+    --grain-blend: screen;
+}
+
+/* Flux define su acento en .dark dentro de @layer theme; este bloque va después
+   en la misma capa y con la misma especificidad, así que gana. */
 @layer theme {
+    :root,
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--accent);
+        --color-accent-content: var(--accent);
+        --color-accent-foreground: var(--accent-foreground);
     }
 }
 
+/* ── 4. Base ───────────────────────────────────────────────────────── */
 @layer base {
+    html {
+        background-color: var(--paper);
+    }
+
+    body {
+        position: relative;
+        isolation: isolate;
+        min-height: 100vh;
+        background-color: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 1.125rem;
+        line-height: 1.55;
+        /* IM Fell no tiene negrita: que el navegador no se la invente. */
+        font-synthesis: none;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grano de papel detrás del contenido (z-index -1 dentro del body aislado).
+       Va en ::after para que quede por encima del fondo de prueba (::before). */
+    body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background-image: var(--grain);
+        opacity: var(--grain-opacity);
+        mix-blend-mode: var(--grain-blend);
+    }
 
     *,
     ::after,
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+        border-color: var(--rule);
+    }
+
+    h1,
+    h2 {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-synthesis: none;
+    }
+
+    a {
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
+    }
+
+    ::selection {
+        background-color: var(--ink);
+        color: var(--paper);
+    }
+
+    @media print {
+        body {
+            background: #fff;
+            color: #000;
+        }
+
+        body::before,
+        body::after {
+            display: none;
+        }
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+/* ── 5. Marca de David ─────────────────────────────────────────────
+   favicon.svg es tinta negra sobre transparente: en oscuro se invierte para que se vea. */
+.garagic-brand-icon {
+    display: block;
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+.dark .garagic-brand-icon {
+    filter: invert(1);
 }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+/* ── 6. FONDO DE PRUEBA: borrar esta regla para quitarlo ───────────
+   El GIF de David en TODAS las pantallas, con opacidad media (.4). Va detrás de todo
+   (z-index -1 dentro del body aislado) y no recibe clics. Es un fondo de prueba: se
+   aclara (contrast/brightness) y se mezcla con el papel para que el texto siga siendo
+   legible por encima (multiply en claro: solo oscurece; screen en oscuro: solo aclara).
+   Con "reducir movimiento" se sustituye por su primer fotograma. */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: url("../../public/images/prayer-circle-prayer.gif") center / cover no-repeat;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    filter: contrast(0.5) brightness(1.5);
 }
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
+.dark body::before {
+    mix-blend-mode: screen;
+    filter: contrast(0.7) brightness(0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before {
+        background-image: url("../../public/images/prayer-circle-prayer-still.webp");
+    }
+}
+
+/* Oculta lo marcado con x-cloak hasta que Alpine arranca (evita parpadeos). */
+[x-cloak] { display: none !important; }

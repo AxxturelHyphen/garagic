@@ -1,5 +1,2 @@
-<div class="relative mb-6 w-full">
-    <flux:heading size="xl" level="1">{{ __('Settings') }}</flux:heading>
-    <flux:subheading size="lg" class="mb-6">{{ __('Manage your profile and account settings') }}</flux:subheading>
-    <flux:separator variant="subtle" />
-</div>
+{{-- Título común de las tres pestañas de ajustes (reales y prototipo). Sin subtítulo: las pestañas ya dicen dónde estás. --}}
+<x-page-header :title="__('Ajustes')" />
