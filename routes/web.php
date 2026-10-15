@@ -7,6 +7,10 @@ Route::view('/', 'welcome')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 });
+Route::middleware(['auth', 'can:admin'])->prefix('admin')->group(function () {
+    // aquí irán las rutas de #22 y #23
+    Route::view('/', 'pages.admin.index')->name('index');
+});
 
 /*
 |--------------------------------------------------------------------------
