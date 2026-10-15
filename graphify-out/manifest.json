@@ -1,0 +1,112 @@
+{
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Actions\\Fortify\\CreateNewUser.php": {
+    "mtime": 1791997727.3621168,
+    "ast_hash": "0d3f62f3dad1521c95d13144cbe9b3cd",
+    "semantic_hash": "0d3f62f3dad1521c95d13144cbe9b3cd"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Actions\\Fortify\\ResetUserPassword.php": {
+    "mtime": 1791997727.3626158,
+    "ast_hash": "5df279bfa3bece0c9d5884c9a1973ab2",
+    "semantic_hash": "5df279bfa3bece0c9d5884c9a1973ab2"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Ai\\OracleClient.php": {
+    "mtime": 1791997727.3636167,
+    "ast_hash": "10b880bbd798ef7011d00618e250dd9a",
+    "semantic_hash": "10b880bbd798ef7011d00618e250dd9a"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Ai\\OracleException.php": {
+    "mtime": 1791997727.3641162,
+    "ast_hash": "7df9eddcdeb077d6a6ee3c296328fde9",
+    "semantic_hash": "7df9eddcdeb077d6a6ee3c296328fde9"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Concerns\\PasswordValidationRules.php": {
+    "mtime": 1791997727.3646166,
+    "ast_hash": "9952ba0578167275cc748c01e92b1a25",
+    "semantic_hash": "9952ba0578167275cc748c01e92b1a25"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Concerns\\ProfileValidationRules.php": {
+    "mtime": 1791997727.365621,
+    "ast_hash": "9da65916eac719381c3ab04cb3a6320c",
+    "semantic_hash": "9da65916eac719381c3ab04cb3a6320c"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Enums\\UserRole.php": {
+    "mtime": 1792006215.972402,
+    "ast_hash": "3ecd9fa1dec7f7eab269b47cc2b71bf3",
+    "semantic_hash": "3ecd9fa1dec7f7eab269b47cc2b71bf3"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Http\\Controllers\\Controller.php": {
+    "mtime": 1791997727.3676286,
+    "ast_hash": "25a307335c0719bc9a91b3f7babd186d",
+    "semantic_hash": "25a307335c0719bc9a91b3f7babd186d"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Livewire\\Actions\\Logout.php": {
+    "mtime": 1791997727.3691251,
+    "ast_hash": "4644ad5fef45333671f2123d03165848",
+    "semantic_hash": "4644ad5fef45333671f2123d03165848"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Models\\User.php": {
+    "mtime": 1792006237.1659477,
+    "ast_hash": "633a4d7562d91b44844121b684f6fac1",
+    "semantic_hash": "633a4d7562d91b44844121b684f6fac1"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Models\\Vehicle.php": {
+    "mtime": 1791997727.3706288,
+    "ast_hash": "08b633b0310d4d97233fbe9a15fcd3f5",
+    "semantic_hash": "08b633b0310d4d97233fbe9a15fcd3f5"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Providers\\AppServiceProvider.php": {
+    "mtime": 1791997727.372135,
+    "ast_hash": "183c0dbbb438655ed74bc8bb2657dcd9",
+    "semantic_hash": "183c0dbbb438655ed74bc8bb2657dcd9"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\app\\Providers\\FortifyServiceProvider.php": {
+    "mtime": 1791997727.372638,
+    "ast_hash": "cb4bc37cc8605000d8f2035161864b3e",
+    "semantic_hash": "cb4bc37cc8605000d8f2035161864b3e"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\database\\factories\\UserFactory.php": {
+    "mtime": 1791997727.3876517,
+    "ast_hash": "d628dd2f9d50d104c7d031951a8c40bf",
+    "semantic_hash": "d628dd2f9d50d104c7d031951a8c40bf"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\database\\migrations\\0001_01_01_000000_create_users_table.php": {
+    "mtime": 1791997727.3891537,
+    "ast_hash": "138280095e9d19f2ba6fb830415602e2",
+    "semantic_hash": "138280095e9d19f2ba6fb830415602e2"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\database\\migrations\\0001_01_01_000001_create_cache_table.php": {
+    "mtime": 1791997727.3896542,
+    "ast_hash": "6952fb360e8d8b84e6f47573e4459d48",
+    "semantic_hash": "6952fb360e8d8b84e6f47573e4459d48"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\database\\migrations\\0001_01_01_000002_create_jobs_table.php": {
+    "mtime": 1791997727.3896542,
+    "ast_hash": "b0603b9fa0a27473971da76bb0c42ee1",
+    "semantic_hash": "b0603b9fa0a27473971da76bb0c42ee1"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\database\\migrations\\2026_10_13_132734_add_role_to_users_table.php": {
+    "mtime": 1791997727.391167,
+    "ast_hash": "d2ef9da0273f920d0b2e5c9b14a8dd77",
+    "semantic_hash": "d2ef9da0273f920d0b2e5c9b14a8dd77"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\database\\seeders\\DatabaseSeeder.php": {
+    "mtime": 1791997727.3916676,
+    "ast_hash": "ab1e985d74209458e33e0f4eb89fb77e",
+    "semantic_hash": "ab1e985d74209458e33e0f4eb89fb77e"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\routes\\console.php": {
+    "mtime": 1791997727.7459078,
+    "ast_hash": "3c6ce2e6d16444282b24a9aa63885563",
+    "semantic_hash": "3c6ce2e6d16444282b24a9aa63885563"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\routes\\settings.php": {
+    "mtime": 1791997727.746907,
+    "ast_hash": "94dc09a71b5d9b35703ca4464f00484d",
+    "semantic_hash": "94dc09a71b5d9b35703ca4464f00484d"
+  },
+  "C:\\Users\\hnsgu\\Documents\\0_projects\\garagic\\routes\\web.php": {
+    "mtime": 1791997727.7494068,
+    "ast_hash": "a69070c16ce551f73523c0b94fafa459",
+    "semantic_hash": "a69070c16ce551f73523c0b94fafa459"
+  }
+}
